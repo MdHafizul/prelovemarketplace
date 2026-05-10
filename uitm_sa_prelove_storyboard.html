@@ -20,6 +20,10 @@
     --card-shadow: 0 4px 24px rgba(44,31,20,0.10);
     --radius: 14px;
     --radius-sm: 8px;
+    /* iPhone 14 Pro Max (CSS points) */
+    --iphone-w: 430px;
+    --iphone-h: 932px;
+    --iphone-screen-offset: 68px; /* total of top/bottom padding + notch + home bar */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -173,13 +177,19 @@
     color: var(--deep);
     margin-bottom: 2px;
   }
+  /* Phone frame standardised to iPhone 14 Pro Max size. When the viewport
+     is narrower than the device width, responsive scale rules below apply. */
   .phone {
-    width: 240px;
+    width: var(--iphone-w);
+    height: var(--iphone-h);
     background: var(--deep);
-    border-radius: 36px;
+    border-radius: 40px;
     padding: 14px 10px;
     box-shadow: 0 12px 48px rgba(44,31,20,0.22), 0 2px 6px rgba(0,0,0,0.15);
     position: relative;
+    box-sizing: border-box;
+    transform-origin: top center;
+    max-width: 100%;
   }
   .phone-notch {
     width: 70px; height: 20px;
@@ -196,7 +206,8 @@
     background: var(--cream);
     border-radius: 24px;
     overflow: hidden;
-    min-height: 460px;
+    /* calculate screen height from total device height minus visible chrome */
+    height: calc(var(--iphone-h) - var(--iphone-screen-offset));
     position: relative;
   }
   .phone-home-bar {
@@ -576,7 +587,13 @@
   }
   @media (max-width: 600px) {
     .sb-row.cols-2, .sb-row.cols-3 { grid-template-columns: 1fr; }
-    .phone { width: 210px; }
+    /* scale the phone down on narrow viewports so the iPhone frame always fits */
+    .phone { transform: scale(0.6); }
+  }
+
+  /* Additional responsive scaling for intermediate widths */
+  @media (min-width: 601px) and (max-width: 900px) {
+    .phone { transform: scale(0.8); }
   }
 </style>
 </head>
@@ -857,7 +874,7 @@
   </div>
 
   <!-- ══ SCREEN 5 & 6 ═══════════════════════════════════════════ -->
-  <div class="sb-section-num"><span class="num-badge">5</span> Cart & Checkout · <span class="num-badge" style="background:var(--mid)">6</span> User Profile / My Listings</div>
+  <div class="sb-section-num"><span class="num-badge">5</span> Cart & Checkout · <span class="num-badge" style="background:var(--mid)">6</span> Payment Confirmation</div>
 
   <div class="sb-row cols-2">
 
@@ -933,52 +950,80 @@
       <div class="frame-flow"><span class="flow-arrow">→</span> Confirm → Order Success</div>
     </div>
 
-    <!-- USER PROFILE -->
+    <!-- PAYMENT CONFIRMATION -->
     <div class="frame-wrap">
-      <div class="frame-label"><strong>Screen 6 — User Profile / My Listings</strong>Profile · Seller dashboard</div>
+      <div class="frame-label"><strong>Screen 6 — Payment Confirmation</strong>Secure checkout · Transaction verify</div>
       <div class="phone">
         <div class="phone-notch"><div class="notch-cam"></div><div class="notch-dot"></div></div>
-        <div class="phone-screen" style="padding-bottom:60px;">
-          <div class="s-profile-hero">
-            <div class="s-profile-avatar">A</div>
-            <div class="s-profile-name">Amalina Zulkifli</div>
-            <div class="s-profile-id">2023456789 · CS224 · Shah Alam</div>
-            <div class="s-stats">
-              <div class="s-stat"><div class="s-stat-num">12</div><div class="s-stat-label">Listed</div></div>
-              <div class="s-stat"><div class="s-stat-num">38</div><div class="s-stat-label">Sold</div></div>
-              <div class="s-stat"><div class="s-stat-num">4.9⭐</div><div class="s-stat-label">Rating</div></div>
+        <div class="phone-screen">
+          <div class="s-topbar">
+            <div style="font-size:10px;font-weight:700;">💳 Payment</div>
+            <div style="font-size:9px;color:var(--green);">Secure</div>
+          </div>
+          <div style="padding:16px 14px;text-align:center;">
+            <div style="font-size:28px;margin-bottom:8px;">✓</div>
+            <div style="font-size:12px;font-weight:700;color:var(--deep);margin-bottom:2px;">Payment Processing</div>
+            <div style="font-size:8px;color:var(--muted);">Verifying transaction details</div>
+          </div>
+          <div class="s-summary" style="margin:6px 12px;">
+            <div class="s-summary-title" style="margin-bottom:8px;">Transaction Details</div>
+            <div style="display:flex;justify-content:space-between;font-size:8px;margin-bottom:4px;color:var(--mid);">
+              <span>Transaction ID:</span>
+              <span style="font-weight:600;font-family:monospace;">TXN2024089001</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:8px;margin-bottom:4px;color:var(--mid);">
+              <span>Payment Method:</span>
+              <span style="font-weight:600;">Online Banking</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:8px;margin-bottom:4px;color:var(--mid);">
+              <span>Date & Time:</span>
+              <span style="font-weight:600;">May 10, 2:45 PM</span>
+            </div>
+            <div style="border-top:1px solid #eee;padding-top:8px;margin-top:8px;">
+              <div style="display:flex;justify-content:space-between;font-size:9px;margin-bottom:3px;">
+                <span>Subtotal</span>
+                <span>RM 83.00</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:9px;margin-bottom:3px;">
+                <span>Delivery</span>
+                <span>RM 5.00</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:9px;margin-bottom:6px;">
+                <span>Platform Fee</span>
+                <span>RM 1.00</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;border-top:1px solid #ddd;padding-top:6px;">
+                <span>Total Charged</span>
+                <span style="color:var(--terracotta);">RM 89.00</span>
+              </div>
             </div>
           </div>
-          <div class="s-tabs">
-            <div class="s-tab active">My Listings</div>
-            <div class="s-tab">Purchases</div>
-            <div class="s-tab">Reviews</div>
-            <div class="s-tab">Settings</div>
+          <div style="padding:0 12px 8px;font-size:8px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;">Receiving Account</div>
+          <div style="background:#fff;border-radius:8px;padding:10px 12px;margin:0 12px 12px;border:1px solid #e8ddd4;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;">P</div>
+              <div>
+                <div style="font-size:9px;font-weight:600;color:var(--deep);">Prelove SA</div>
+                <div style="font-size:7.5px;color:var(--muted);">UiTM Campus Marketplace</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:7.5px;color:var(--green);background:rgba(74,124,89,0.1);padding:4px 8px;border-radius:4px;">
+              <span>✓</span> Account Verified
+            </div>
           </div>
-          <div style="padding:8px 12px 4px;display:flex;justify-content:space-between;align-items:center;">
-            <div style="font-size:8px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;">Active (4)</div>
-            <div style="font-size:8px;background:var(--terracotta);color:#fff;padding:3px 10px;border-radius:50px;font-weight:600;">+ Add New</div>
+          <div style="padding:10px 12px;background:var(--warm);border-radius:8px;margin:0 12px 12px;font-size:8px;line-height:1.5;color:var(--mid);">
+            <strong>✓ Secure Payment</strong><br>
+            Your payment is encrypted and processed securely through certified payment gateway.
           </div>
-          <div class="s-listing-grid">
-            <div class="s-listing-thumb" style="background:#FFF0E8;">👗<div class="s-listing-badge" style="background:var(--green);">Active</div></div>
-            <div class="s-listing-thumb" style="background:#E8F5EE;">📚<div class="s-listing-badge" style="background:var(--blue);">Sold</div></div>
-            <div class="s-listing-thumb" style="background:#E8F0FF;">💻<div class="s-listing-badge" style="background:var(--green);">Active</div></div>
-            <div class="s-listing-thumb" style="background:#F5E8FF;">🎒<div class="s-listing-badge" style="background:var(--terracotta);">Pending</div></div>
-            <div class="s-listing-thumb" style="background:#FFF8E8;">🪑<div class="s-listing-badge" style="background:var(--green);">Active</div></div>
-            <div class="s-listing-thumb" style="background:#FFE8E8;">👠<div class="s-listing-badge" style="background:var(--blue);">Sold</div></div>
-          </div>
-          <div class="s-nav">
-            <div class="s-nav-item"><div class="s-nav-icon">🏠</div>Home</div>
-            <div class="s-nav-item"><div class="s-nav-icon">🔍</div>Browse</div>
-            <div class="s-nav-item"><div class="s-nav-icon">➕</div>Sell</div>
-            <div class="s-nav-item"><div class="s-nav-icon">🛒</div>Cart</div>
-            <div class="s-nav-item active"><div class="s-nav-icon">👤</div>Profile</div>
+          <div style="display:flex;gap:8px;padding:0 12px;margin-bottom:60px;">
+            <div style="flex:1;background:#fff;border:1px solid #ddd;border-radius:8px;padding:8px;text-align:center;font-size:9px;font-weight:600;color:var(--mid);cursor:pointer;">Back</div>
+            <div style="flex:2;background:var(--terracotta);color:#fff;border-radius:8px;padding:8px;text-align:center;font-size:9px;font-weight:700;cursor:pointer;">Complete Payment</div>
           </div>
         </div>
         <div class="phone-home-bar"><div class="home-bar"></div></div>
       </div>
-      <div class="frame-note">Student profile with seller stats, listing grid with status badges (Active, Sold, Pending).</div>
-      <div class="frame-flow"><span class="flow-arrow">→</span> Tap listing → Edit / Delete</div>
+      <div class="frame-note">Payment confirmation screen with transaction details, receiving account, and secure payment badge.</div>
+      <div class="frame-flow"><span class="flow-arrow">→</span> Complete → Order Success</div>
     </div>
 
   </div>
